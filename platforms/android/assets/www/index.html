@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <!--<link rel="stylesheet" type="text/css" href="css/index.css" />-->
+        <link rel="stylesheet" href="bower_components/todomvc-common/base.css">
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+       <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBIj8k22kltsX33-Q0B9e5j64ZU0r8nUIo&sensor=false"></script>
+       <script type="text/javascript" src="js/index.js"></script>
+       
+        <style>
+			.inline {
+				float: left;
+				white-space: pre;
+				word-break: break-word;
+				padding: 15px 60px 15px 15px;
+				margin-left: 45px;
+				display: block;
+				line-height: 1.2;
+				-webkit-transition: color 0.4s;
+				transition: color 0.4s;
+			}
+			
+			.geolocation-active {
+				width: 550px;
+				height: 500px;
+			}
+		</style>
+        <title>Hello World</title>
+    </head>
+    <body>
+        
+        <div id="geolocation" style="width: 550px; height: 436;"></div>
+        
+        <button onclick="mobileApp.Camera()">Click me</button>
+        
+        <img id="myImage"></img>
+        
+       <section id="todoapp">
+			<header id="header">
+				<h1>todos</h1>
+				<input id="new-todo" placeholder="What needs to be done?" autofocus>
+			</header>
+			<section id="main">
+				<input id="toggle-all" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
+				<ul id="todo-list"></ul>
+			</section>
+			<footer id="footer"></footer>
+		</section>
+		<footer id="info">
+			<p>Double-click to edit a todo</p>
+			<p>Written by <a href="https://github.com/addyosmani">Addy Osmani</a></p>
+			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+		</footer>
+		<script type="text/template" id="item-template">
+			<div class="view">
+				<input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
+				<label><%- title %></label>
+				<button class="destroy"></button>
+			</div>
+			<input class="edit" value="<%- title %>">
+		</script>
+		<script type="text/template" id="stats-template">
+			<span id="todo-count"><strong><%= remaining %></strong> <%= remaining === 1 ? 'item' : 'items' %> left</span>
+			<ul id="filters">
+				<li>
+					<a class="selected" href="#/">All</a>
+				</li>
+				<li>
+					<a href="#/active">Active</a>
+				</li>
+				<li>
+					<a href="#/completed">Completed</a>
+				</li>
+			</ul>
+			<% if (completed) { %>
+			<button id="clear-completed">Clear completed (<%= completed %>)</button>
+			<% } %>
+		</script>
+		<script src="bower_components/todomvc-common/base.js"></script>
+		<script src="bower_components/jquery/jquery.js"></script>
+		<script src="bower_components/underscore/underscore.js"></script>
+		<script src="bower_components/backbone/backbone.js"></script>
+		<script src="bower_components/backbone.localStorage/backbone.localStorage.js"></script>
+		 
+		<script src="js/models/todo.js"></script>
+		<script src="js/collections/todos.js"></script>
+		<script src="js/views/todo-view.js"></script>
+		<script src="js/views/app-view.js"></script>
+		<script src="js/routers/router.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/hammer.min.js"></script>
+		<script src="js/jquery.hammer.js"></script>
+	
+		<script>  
+			$(document).ready(function() {  
+		
+				$('label').hammer().on('tap', function(){
+					<!--alert("Swipe");-->
+				})
+			}); 
+		</script> 
+        
+       <!--<script type="text/javascript" src="cordova.js"></script>-->
+       <script type="text/javascript">
+	     	mobileApp.onDeviceReady();
+        </script>
+    </body>
+</html>
