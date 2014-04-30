@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ 
 var mobileApp = {
+
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -55,11 +57,11 @@ var mobileApp = {
     		mapTypeId: google.maps.MapTypeId.ROADMAP
     	};
     	
-    	var map = new google.maps.Map(document.getElementById("geolocation"), mapOptions);  
+    	map = new google.maps.Map(document.getElementById("geolocation"), mapOptions);  
     	document.getElementById("geolocation").className = document.getElementById("geolocation").className + " geolocation-active";
-    
-    	marker = new google.maps.Marker({
-            draggable: true,
+    	
+		marker = new google.maps.Marker({
+            draggable: false,
             raiseOnDrag: false,
             icon:'https://dl.dropbox.com/u/20772744/car.png',
             map: map,
@@ -74,6 +76,7 @@ var mobileApp = {
     onCameraSuccess: function(imageData) {
 	    var image = document.getElementById('myImage');
 	    image.src = "data:image/jpeg;base64," + imageData;
+	    document.getElementById('imageData').value =  "data:image/jpeg;base64," + imageData;
 	},
 	
 	onCameraFail: function(message) {
@@ -81,9 +84,11 @@ var mobileApp = {
 	},
 	
 	Camera: function() {
-		alert(navigator.camera);
 		navigator.camera.getPicture(mobileApp.onCameraSuccess, mobileApp.onCameraFail, { quality: 50,
-		    destinationType: Camera.DestinationType.DATA_URL
+		    destinationType: Camera.DestinationType.DATA_URL,
+		    targetWidth: 250,
+		    targetHeight: 250,
+		    correctOrientation: true
 		});
 	}
 };
