@@ -36,12 +36,7 @@ var mobileApp = {
     // function, we must explicity call 'mobileApp.receivedEvent(...);'
     
      onDeviceReady: function() {
-     	//alert(navigator.camera);
-     	//navigator.Camera.getPicture(mobileApp.onCameraSuccess, mobileApp.onCameraFail, {
-	    //     quality: 50, 
-	    //     destinationType: navigator.camera.DestinationType.FILE_URI,
-	    //     sourceType: pictureSource
-	    //});
+     	//app.todos.create(app.AppView.newAttributes());
        	navigator.geolocation.watchPosition(mobileApp.onLocationSuccess, mobileApp.onLocationError, {maximumAge: 300000, timeout:10000, enableHighAccuracy : true});
     },
     
@@ -50,6 +45,9 @@ var mobileApp = {
     	var longitude = position.coords.longitude;
     	var latitude = position.coords.latitude;
     	var latLong = new google.maps.LatLng(latitude, longitude);
+    	
+    	document.getElementById('lat').value = latitude;
+    	document.getElementById('long').value = longitude;
     	
     	var mapOptions = {
     		center: latLong,
@@ -77,6 +75,8 @@ var mobileApp = {
 	    var image = document.getElementById('myImage');
 	    image.src = "data:image/jpeg;base64," + imageData;
 	    document.getElementById('imageData').value =  "data:image/jpeg;base64," + imageData;
+	    
+	    app.todos.create(app.AppView.newAttributes());
 	},
 	
 	onCameraFail: function(message) {
