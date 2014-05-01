@@ -35,6 +35,8 @@ var app = app || {};
 			this.$list = $('#todo-list');
 			this.$image = $('#myImage');
 			this.$imageData = $('#imageData');
+			this.$lat = $('#lat');
+			this.$long = $('#long');
 
 			this.listenTo(app.todos, 'add', this.addOne);
 			this.listenTo(app.todos, 'reset', this.addAll);
@@ -102,7 +104,9 @@ var app = app || {};
 				title: this.$input.val().trim(),
 				order: app.todos.nextOrder(),
 				completed: false,
-				image: this.$imageData.val()
+				image: this.$imageData.val(),
+				lat: this.$lat.val(),
+				long: this.$long.val()
 			};
 		},
 
