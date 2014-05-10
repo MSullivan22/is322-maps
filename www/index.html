@@ -45,7 +45,7 @@
 			.geolocation-active {
 				width: 550px;
 				height: 500px;
-			}						#take-pic {				width:200px;				height:50px;				background-color:black;			}
+			}						#take-pic {				width:200px;				height:50px;				background-color:black;				color:white;			}						#test {				width:200px;				height:50px;				background-color:orange;			}
 		</style>
         <title>Hello World</title>
     </head>
@@ -56,7 +56,7 @@
        <input type="hidden" id="long" value="">
        <section id="todoapp">
 			<header id="header">
-				<h1>Saved Locations</h1>								<button id="take-pic">Take picture</button>
+				<h1>Saved Locations</h1>								<button id="test">TEST</button>								<button id="take-pic">Take picture</button>
 			</header>
 			<section id="main">			
 				<ul id="todo-list"></ul>
@@ -69,7 +69,7 @@
 		</footer>
 		<script type="text/template" id="item-template">
 			<div class="view">
-				<img src="<%- image %>"></img>
+				<img class="images" src="<%- image %>"></img>
 				<button class="destroy"></button>
 			</div>
 		</script>

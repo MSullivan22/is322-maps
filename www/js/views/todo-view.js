@@ -17,7 +17,8 @@ var app = app || {};
 
 		// The DOM events specific to an item.
 		events: {
-			'click .destroy': 'clear'
+			'click .destroy': 'clear',
+			'click .images': 'hilight'
 		},
 
 		// The TodoView listens for changes to its model, re-rendering. Since
@@ -44,6 +45,11 @@ var app = app || {};
 
 			this.$el.html(this.template(this.model.toJSON()));
 			return this;
+		},
+		
+		hilight: function() {
+			window.hilightedMarker = window.markers[this.model.get('order')-1];
+			window.map.setCenter(window.hilightedMarker.position);
 		},
 
 		// Remove the item, destroy the model from *localStorage* and delete its view.

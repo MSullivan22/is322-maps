@@ -3,6 +3,7 @@ var app = app || {};
 var map;
 var currentMarker;
 var markers = [];
+var hilightedMarker;
 
 (function ($) {
 	'use strict';
@@ -23,6 +24,7 @@ var markers = [];
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
 			'click #take-pic': 'Camera',
+			'click #test': 'create',
 		},
 
 		// At initialization we bind to the relevant events on the `Todos`
@@ -80,7 +82,7 @@ var markers = [];
 				app.todos.each(function(todo) {
 					_this.newMarker(todo);
 				});
-			} else {
+			} else if (hilightedMarker == null) {
 				map.setCenter(latLong);
 			}
 			
@@ -93,7 +95,7 @@ var markers = [];
 					position: latLong
 				});		
 			} else {
-				currentMarker.setPosition = latLong;
+				currentMarker.setPosition(latLong);
 			}
 			
 			currentMarker.setZIndex(google.maps.Marker.MAX_ZINDEX);	
@@ -121,7 +123,7 @@ var markers = [];
 				position: new google.maps.LatLng(todo.get('lat'), todo.get('long'))
 			});
 			
-			markers[todo.get('order')] = marker;
+			markers[todo.get('order')-1] = marker;
 		},
 		
 		onCameraSuccess: function(imageData) {
@@ -135,7 +137,7 @@ var markers = [];
 		
 		create: function() {
 			var newTodo = app.todos.create(this.newAttributes());
-			alert(newTodo);
+			this.newMarker(newTodo);
 		},
 		
 		Camera: function() {
