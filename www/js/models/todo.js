@@ -14,7 +14,9 @@ var app = app || {};
 		defaults: {
 			title: '',
 			completed: false,
-			image: ''
+			image: '',
+			lat: 40.592689,
+			long: -74.41927420000002
 		},
 
 		// Toggle the `completed` state of this todo item.

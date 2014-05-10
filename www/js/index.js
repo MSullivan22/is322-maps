@@ -19,7 +19,7 @@
  
 var mobileApp = {
 
-    // Application Constructor
+   /*// Application Constructor
     initialize: function() {
         this.bindEvents();
     },
@@ -35,7 +35,7 @@ var mobileApp = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'mobileApp.receivedEvent(...);'
     
-     onDeviceReady: function() {
+    onDeviceReady: function() {
      	//app.todos.create(app.AppView.newAttributes());
        	navigator.geolocation.watchPosition(mobileApp.onLocationSuccess, mobileApp.onLocationError, {maximumAge: 300000, timeout:10000, enableHighAccuracy : true});
     },
@@ -90,5 +90,5 @@ var mobileApp = {
 		    targetHeight: 250,
 		    correctOrientation: true
 		});
-	}
+	}*/
 };
