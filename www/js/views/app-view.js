@@ -21,22 +21,16 @@ var currentMarker;
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
-			'keypress #new-todo': 'createOnEnter',
-			'click #clear-completed': 'clearCompleted',
 			'click #take-pic': 'Camera',
-			'click #toggle-all': 'toggleAllComplete'
 		},
 
 		// At initialization we bind to the relevant events on the `Todos`
 		// collection, when items are added or changed. Kick things off by
 		// loading any preexisting todos that might be saved in *localStorage*.
 		initialize: function () {
-			this.allCheckbox = this.$('#toggle-all')[0];
-			this.$input = this.$('#new-todo');
 			this.$footer = this.$('#footer');
 			this.$main = this.$('#main');
 			this.$list = $('#todo-list');
-			this.$image = $('#myImage');
 			this.$imageData = $('#imageData');
 			this.$lat = $('#lat');
 			this.$long = $('#long');
@@ -46,8 +40,6 @@ var currentMarker;
 
 			this.listenTo(app.todos, 'add', this.addOne);
 			this.listenTo(app.todos, 'reset', this.addAll);
-			this.listenTo(app.todos, 'change:completed', this.filterOne);
-			this.listenTo(app.todos, 'filter', this.filterAll);
 			this.listenTo(app.todos, 'all', this.render);
 			
 			document.addEventListener('deviceready', this.onDeviceReady, false);
@@ -59,12 +51,7 @@ var currentMarker;
 			app.todos.fetch({reset: true});
 		},
 		
-		thing: function() {
-			alert("stuff");
-		},
-		
 		onDeviceReady: function() {
-			//app.todos.create(this.newAttributes());
 			alert("eh");
 			navigator.geolocation.watchPosition(this.onLocationSuccess, this.onLocationError, {enableHighAccuracy : true});
 		},
@@ -120,8 +107,6 @@ var currentMarker;
 		},
 		
 		onCameraSuccess: function(imageData) {
-			var image = document.getElementById('myImage');
-			image.src = "data:image/jpeg;base64," + imageData;
 			document.getElementById('imageData').value =  "data:image/jpeg;base64," + imageData;
 			
 			this.create();
@@ -144,28 +129,14 @@ var currentMarker;
 		// Re-rendering the App just means refreshing the statistics -- the rest
 		// of the app doesn't change.
 		render: function () {
-			var completed = app.todos.completed().length;
-			var remaining = app.todos.remaining().length;
 
 			if (app.todos.length) {
 				this.$main.show();
 				this.$footer.show();
-
-				this.$footer.html(this.statsTemplate({
-					completed: completed,
-					remaining: remaining
-				}));
-
-				this.$('#filters li a')
-					.removeClass('selected')
-					.filter('[href="#/' + (app.TodoFilter || '') + '"]')
-					.addClass('selected');
 			} else {
 				this.$main.hide();
 				this.$footer.hide();
 			}
-
-			this.allCheckbox.checked = !remaining;
 		},
 
 		// Add a single todo item to the list by creating a view for it, and
@@ -181,14 +152,6 @@ var currentMarker;
 			app.todos.each(this.addOne, this);
 		},
 
-		filterOne: function (todo) {
-			todo.trigger('visible');
-		},
-
-		filterAll: function () {
-			app.todos.each(this.filterOne, this);
-		},
-
 		// Generate the attributes for a new Todo item.
 		newAttributes: function () {
 			return {
@@ -199,35 +162,6 @@ var currentMarker;
 				long: this.$long.val(),
 				image: this.$imageData.val()
 			};
-		},
-
-		// If you hit return in the main input field, create new **Todo** model,
-		// persisting it to *localStorage*.
-		createOnEnter: function (e) {
-			if (e.which === ENTER_KEY && this.$input.val().trim()) {
-				app.todos.create(this.newAttributes());
-				this.$input.val('');
-			}
-		},
-		
-		create: function() {
-			app.todos.create(this.newAttributes());
-		},
-
-		// Clear all completed todo items, destroying their models.
-		clearCompleted: function () {
-			_.invoke(app.todos.completed(), 'destroy');
-			return false;
-		},
-
-		toggleAllComplete: function () {
-			var completed = this.allCheckbox.checked;
-
-			app.todos.each(function (todo) {
-				todo.save({
-					completed: completed
-				});
-			});
 		}
 	});
 })(jQuery);
