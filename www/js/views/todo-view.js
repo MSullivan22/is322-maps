@@ -50,6 +50,9 @@ var app = app || {};
 		hilight: function() {
 			window.hilightedMarker = window.markers[this.model.get('order')-1];
 			window.map.setCenter(window.hilightedMarker.position);
+			document.getElementById("geolocation").className = "active";
+			document.getElementById("map-return").className = "active";
+			document.getElementById("map-wrapper").className = "active";
 		},
 
 		// Remove the item, destroy the model from *localStorage* and delete its view.

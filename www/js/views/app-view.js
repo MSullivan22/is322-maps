@@ -78,7 +78,6 @@ var hilightedMarker;
 			
 			if (map == null) {
 				map = new google.maps.Map(document.getElementById("geolocation"), mapOptions);  
-				document.getElementById("geolocation").className = document.getElementById("geolocation").className + " geolocation-active";
 				app.todos.each(function(todo) {
 					_this.newMarker(todo);
 				});
@@ -98,7 +97,7 @@ var hilightedMarker;
 				currentMarker.setPosition(latLong);
 			}
 			
-			currentMarker.setZIndex(google.maps.Marker.MAX_ZINDEX);	
+			currentMarker.setZIndex(100);	
 			
 		},
 		
