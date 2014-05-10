@@ -12,8 +12,6 @@ var app = app || {};
 		// Default attributes for the todo
 		// and ensure that each todo created has `title` and `completed` keys.
 		defaults: {
-			title: '',
-			completed: false,
 			image: '',
 			lat: 40.592689,
 			long: -74.41927420000002

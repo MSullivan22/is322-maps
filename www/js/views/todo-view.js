@@ -48,6 +48,7 @@ var app = app || {};
 
 		// Remove the item, destroy the model from *localStorage* and delete its view.
 		clear: function () {
+			window.markers[this.model.get('order')-1].setMap(null);
 			this.model.destroy();
 		}
 	});

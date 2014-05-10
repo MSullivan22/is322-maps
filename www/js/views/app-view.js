@@ -2,6 +2,7 @@
 var app = app || {};
 var map;
 var currentMarker;
+var markers = [];
 
 (function ($) {
 	'use strict';
@@ -37,6 +38,7 @@ var currentMarker;
 			
 			_.bindAll(this, 'onCameraSuccess', 'onCameraFail');
 			_.bindAll(this, 'onLocationSuccess', 'onLocationError');
+			_.bindAll(this, 'newAttributes', 'create', 'getOrientation', 'newMarker');
 
 			this.listenTo(app.todos, 'add', this.addOne);
 			this.listenTo(app.todos, 'reset', this.addAll);
@@ -52,7 +54,6 @@ var currentMarker;
 		},
 		
 		onDeviceReady: function() {
-			alert("eh");
 			navigator.geolocation.watchPosition(this.onLocationSuccess, this.onLocationError, {enableHighAccuracy : true});
 		},
 		
@@ -71,34 +72,31 @@ var currentMarker;
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 			
+			var _this = this;
+			
 			if (map == null) {
 				map = new google.maps.Map(document.getElementById("geolocation"), mapOptions);  
 				document.getElementById("geolocation").className = document.getElementById("geolocation").className + " geolocation-active";
-				app.todos.each(function (todo) {
-					//alert(todo.get('lat')+", "+todo.get('long'));
-					var marker = new google.maps.Marker({
-						draggable: false,
-						raiseOnDrag: false,
-						icon:'img/car.png',
-						map: map,
-						position: new google.maps.LatLng(todo.get('lat'), todo.get('long'))
-					});
+				app.todos.each(function(todo) {
+					_this.newMarker(todo);
 				});
 			} else {
 				map.setCenter(latLong);
 			}
 			
-			if (currentMarker != null) {
-				currentMarker.setMap(null);
+			if (currentMarker == null) {			
+				currentMarker = new google.maps.Marker({
+					draggable: false,
+					raiseOnDrag: false,
+					icon:'img/person2.png',
+					map: map,
+					position: latLong
+				});		
+			} else {
+				currentMarker.setPosition = latLong;
 			}
 			
-			currentMarker = new google.maps.Marker({
-				draggable: false,
-				raiseOnDrag: false,
-				icon:'img/person2.png',
-				map: map,
-				position: latLong
-			});			
+			currentMarker.setZIndex(google.maps.Marker.MAX_ZINDEX);	
 			
 		},
 		
@@ -106,9 +104,28 @@ var currentMarker;
 			alert('code: ' +error.code+ '\n' + 'message: ' +error.message + '\n');
 		},
 		
+		newMarker: function(todo) {
+			var size = (todo.get('orientation') == "landscape"? new google.maps.Size(window.innerHeight*0.1, window.innerWidth*0.1) : new google.maps.Size(window.innerWidth*0.1, window.innerHeight*0.1));
+			var icon = new google.maps.MarkerImage(
+		    	todo.get('image'), //url
+		    	null, //size
+		    	null, //origin
+		    	null, //anchor 
+		    	size
+		    );
+			var marker = new google.maps.Marker({
+				draggable: false,
+				raiseOnDrag: false,
+				icon: icon,
+				map: map,
+				position: new google.maps.LatLng(todo.get('lat'), todo.get('long'))
+			});
+			
+			markers[todo.get('order')] = marker;
+		},
+		
 		onCameraSuccess: function(imageData) {
 			document.getElementById('imageData').value =  "data:image/jpeg;base64," + imageData;
-			
 			this.create();
 		},
 		
@@ -116,8 +133,12 @@ var currentMarker;
 			alert('Failed because: ' + message);
 		},
 		
+		create: function() {
+			var newTodo = app.todos.create(this.newAttributes());
+			alert(newTodo);
+		},
+		
 		Camera: function() {
-			alert("Camera attempt");
 			navigator.camera.getPicture(this.onCameraSuccess, this.onCameraFail, { quality: 50,
 				destinationType: Camera.DestinationType.DATA_URL,
 				targetWidth: 250,
@@ -154,14 +175,31 @@ var currentMarker;
 
 		// Generate the attributes for a new Todo item.
 		newAttributes: function () {
+			var orientation = this.getOrientation();
 			return {
-				title: this.$input.val().trim(),
 				order: app.todos.nextOrder(),
-				completed: false,
 				lat: this.$lat.val(),
 				long: this.$long.val(),
+				orientation: orientation,
 				image: this.$imageData.val()
 			};
+		},
+		
+		getOrientation: function() {
+		    switch (window.orientation) {
+		        case 0:
+		            // portrait, home bottom
+		        case 180:
+		            // portrait, home top
+		            //alert("portrait H: " + $(window).height() + " W: " + $(window).width());
+		            return "portrait";
+		        case -90:
+		            // landscape, home left
+		        case 90:
+		            // landscape, home right
+		            //alert("landscape H: " + $(window).height() + " W: " + $(window).width());
+		           return "landscape";
+		    }
 		}
 	});
 })(jQuery);
