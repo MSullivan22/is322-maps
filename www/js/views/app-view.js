@@ -39,6 +39,7 @@ var hilightedMarker;
 			this.$imageData = $('#imageData');
 			this.$lat = $('#lat');
 			this.$long = $('#long');
+			this.$mode = $('#direction-mode');
 			
 			_.bindAll(this, 'onCameraSuccess', 'onCameraFail');
 			_.bindAll(this, 'onLocationSuccess', 'onLocationError');
@@ -47,6 +48,10 @@ var hilightedMarker;
 			this.listenTo(app.todos, 'add', this.addOne);
 			this.listenTo(app.todos, 'reset', this.addAll);
 			this.listenTo(app.todos, 'all', this.render);
+			
+			
+			var _this = this;
+			document.getElementById('direction-mode').onchange=function(){ _this.calcRoute(); };
 			
 			document.addEventListener('deviceready', this.onDeviceReady, false);
 			this.onDeviceReady();
@@ -217,7 +222,7 @@ var hilightedMarker;
 			 var request = {
 			    origin:currentMarker.getPosition(),
 			    destination:hilightedMarker.getPosition(),
-			    travelMode: google.maps.TravelMode.DRIVING
+			    travelMode: document.getElementById('direction-mode').value == "DRIVING"? google.maps.TravelMode.DRIVING:google.maps.TravelMode.WALKING
 			  };
 			   directionsService.route(request, function(response, status) {
 			    if (status == google.maps.DirectionsStatus.OK) {
