@@ -53,6 +53,8 @@ var app = app || {};
 			document.getElementById("geolocation").className = "active";
 			document.getElementById("map-return").className = "active";
 			document.getElementById("map-wrapper").className = "active";
+			google.maps.event.trigger(map, 'resize');
+			google.maps.event.trigger(window.hilightedMarker, 'click');
 		},
 
 		// Remove the item, destroy the model from *localStorage* and delete its view.

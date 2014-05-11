@@ -1,6 +1,8 @@
 /*global Backbone, jQuery, _, ENTER_KEY */
 var app = app || {};
 var map;
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
 var currentMarker;
 var markers = [];
 var hilightedMarker;
@@ -40,7 +42,7 @@ var hilightedMarker;
 			
 			_.bindAll(this, 'onCameraSuccess', 'onCameraFail');
 			_.bindAll(this, 'onLocationSuccess', 'onLocationError');
-			_.bindAll(this, 'newAttributes', 'create', 'getOrientation', 'newMarker');
+			_.bindAll(this, 'newAttributes', 'create', 'getOrientation', 'newMarker', 'calcRoute');
 
 			this.listenTo(app.todos, 'add', this.addOne);
 			this.listenTo(app.todos, 'reset', this.addAll);
@@ -70,7 +72,7 @@ var hilightedMarker;
 			
 			var mapOptions = {
 				center: latLong,
-				zoom: 16,
+				zoom: 20,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 			
@@ -79,8 +81,11 @@ var hilightedMarker;
 			if (map == null) {
 				map = new google.maps.Map(document.getElementById("geolocation"), mapOptions);  
 				app.todos.each(function(todo) {
-					_this.newMarker(todo);
+					_this.newMarker(todo, _this);
 				});
+				directionsDisplay = new google.maps.DirectionsRenderer();
+				directionsDisplay.setMap(map);
+				directionsDisplay.setPanel(document.getElementById("directions"));
 			} else if (hilightedMarker == null) {
 				map.setCenter(latLong);
 			}
@@ -105,7 +110,7 @@ var hilightedMarker;
 			alert('code: ' +error.code+ '\n' + 'message: ' +error.message + '\n');
 		},
 		
-		newMarker: function(todo) {
+		newMarker: function(todo, _this) {
 			var size = (todo.get('orientation') == "landscape"? new google.maps.Size(window.innerHeight*0.1, window.innerWidth*0.1) : new google.maps.Size(window.innerWidth*0.1, window.innerHeight*0.1));
 			var icon = new google.maps.MarkerImage(
 		    	todo.get('image'), //url
@@ -120,6 +125,11 @@ var hilightedMarker;
 				icon: icon,
 				map: map,
 				position: new google.maps.LatLng(todo.get('lat'), todo.get('long'))
+			});
+			
+			google.maps.event.addListener(marker, 'click', function() {
+				window.hilightedMarker = this;
+				_this.calcRoute();
 			});
 			
 			markers[todo.get('order')-1] = marker;
@@ -201,6 +211,20 @@ var hilightedMarker;
 		            //alert("landscape H: " + $(window).height() + " W: " + $(window).width());
 		           return "landscape";
 		    }
+		},
+		
+		calcRoute: function() {
+			 var request = {
+			    origin:currentMarker.getPosition(),
+			    destination:hilightedMarker.getPosition(),
+			    travelMode: google.maps.TravelMode.DRIVING
+			  };
+			   directionsService.route(request, function(response, status) {
+			    if (status == google.maps.DirectionsStatus.OK) {
+			      directionsDisplay.setDirections(response);
+			    }
+			  });
+			  document.getElementById("directions-button").className = "active";
 		}
 	});
 })(jQuery);
