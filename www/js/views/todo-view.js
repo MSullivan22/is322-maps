@@ -53,6 +53,7 @@ var app = app || {};
 			document.getElementById("geolocation").className = "active";
 			document.getElementById("map-return").className = "active";
 			document.getElementById("map-wrapper").className = "active";
+			document.getElementById("directions-button").className = "active";
 			google.maps.event.trigger(map, 'resize');
 			google.maps.event.trigger(window.hilightedMarker, 'click');
 		},

@@ -6,6 +6,7 @@ var directionsService = new google.maps.DirectionsService();
 var currentMarker;
 var markers = [];
 var hilightedMarker;
+var picOrientation;
 
 (function ($) {
 	'use strict';
@@ -116,6 +117,7 @@ var hilightedMarker;
 		},
 		
 		newMarker: function(todo, _this) {
+			alert('todo is: '+todo.get('orientation'));
 			var size = (todo.get('orientation') == "landscape"? new google.maps.Size(window.innerHeight*0.1, window.innerWidth*0.1) : new google.maps.Size(window.innerWidth*0.1, window.innerHeight*0.1));
 			var icon = new google.maps.MarkerImage(
 		    	todo.get('image'), //url
@@ -150,6 +152,7 @@ var hilightedMarker;
 		},
 		
 		create: function() {
+			window.picOrientation = this.getOrientation();
 			var newTodo = app.todos.create(this.newAttributes());
 			this.newMarker(newTodo);
 		},
@@ -191,12 +194,11 @@ var hilightedMarker;
 
 		// Generate the attributes for a new Todo item.
 		newAttributes: function () {
-			var orientation = this.getOrientation();
 			return {
 				order: app.todos.nextOrder(),
 				lat: this.$lat.val(),
 				long: this.$long.val(),
-				orientation: orientation,
+				orientation: window.picOrientation,
 				image: this.$imageData.val()
 			};
 		},
