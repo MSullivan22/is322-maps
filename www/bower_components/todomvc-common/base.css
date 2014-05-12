@@ -85,10 +85,18 @@ input[type="checkbox"] {
 	text-rendering: optimizeLegibility;
 }
 
+#test{
+	position: relative;
+}
+
+#take-pic{
+	position: relative;
+}
+
 #header {
-	padding-top: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	border-radius: inherit;
-	position:relative;
 }
 
 #header:bofore {
