@@ -117,7 +117,6 @@ var picOrientation;
 		},
 		
 		newMarker: function(todo, _this) {
-			alert('todo is: '+todo.get('orientation'));
 			var size = (todo.get('orientation') == "landscape"? new google.maps.Size(window.innerHeight*0.1, window.innerWidth*0.1) : new google.maps.Size(window.innerWidth*0.1, window.innerHeight*0.1));
 			var icon = new google.maps.MarkerImage(
 		    	todo.get('image'), //url
@@ -221,10 +220,25 @@ var picOrientation;
 		},
 		
 		calcRoute: function() {
+			var mode;
+			switch (document.getElementById('direction-mode').value) {
+				case "DRIVING":
+					mode = google.maps.TravelMode.DRIVING;
+					break;
+				case "WALKING":
+					mode = google.maps.TravelMode.WALKING;
+					break;
+				case "BICYCLING":
+					mode = google.maps.TravelMode.BICYCLING;
+					break;
+				case "TRANSIT":
+					mode = google.maps.TravelMode.TRANSIT;
+					break;
+			}
 			 var request = {
 			    origin:currentMarker.getPosition(),
 			    destination:hilightedMarker.getPosition(),
-			    travelMode: document.getElementById('direction-mode').value == "DRIVING"? google.maps.TravelMode.DRIVING:google.maps.TravelMode.WALKING
+			    travelMode: mode
 			  };
 			   directionsService.route(request, function(response, status) {
 			    if (status == google.maps.DirectionsStatus.OK) {
